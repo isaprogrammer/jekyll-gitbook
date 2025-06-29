@@ -1,6 +1,6 @@
 ---
 layout: home
-title: ORM Log
+title: Mybatis Log Ultra
 permalink: /
 ---
 
