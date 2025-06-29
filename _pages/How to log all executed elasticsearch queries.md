@@ -1,0 +1,12 @@
+---
+title: How to log all executed elasticsearch queries
+author: Yalong Lee
+date: 2025-06-29
+category: Jekyll
+layout: post
+---
+
+This work is open sourced under the Apache License, Version 2.0, using the
+same license as the original [GitBook](https://github.com/GitbookIO/gitbook) repository.
+
+Copyright 2019 Tao He.
