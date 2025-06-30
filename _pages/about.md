@@ -1,5 +1,5 @@
 ---
-title: Can MyBatis log the complete SQL that can run directly
+title: 关于
 author: Yalong Lee
 date: 2025-06-29
 category: Jekyll

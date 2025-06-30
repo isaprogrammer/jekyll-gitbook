@@ -1,5 +1,5 @@
 ---
-title: How to log all executed elasticsearch queries
+title: issue
 author: Yalong Lee
 date: 2025-06-29
 category: Jekyll
