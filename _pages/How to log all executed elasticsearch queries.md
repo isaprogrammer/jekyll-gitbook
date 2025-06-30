@@ -6,7 +6,9 @@ category: Jekyll
 layout: post
 ---
 
-# elasticsearch-7x 增强点（org.elasticsearch.client.RestClient）
+# elasticsearch-7x
+
+## 增强点（org.elasticsearch.client.RestClient）
 
 ```java
 private static HttpRequestBase createHttpRequest(String method, URI uri, HttpEntity entity, boolean compressionEnabled) {

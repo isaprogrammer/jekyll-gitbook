@@ -6,7 +6,9 @@ category: Jekyll
 layout: post
 ---
 
-# mybatis-3.2 增强点（org.apache.ibatis.executor.BaseExecutor）
+# mybatis-3.2 
+
+## 增强点（org.apache.ibatis.executor.BaseExecutor）
 
 ```java
 @Override
