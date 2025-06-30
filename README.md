@@ -4,8 +4,6 @@ title: 插件简介
 permalink: /
 ---
 
-## 为SQL调试效率而生
-
 <p>
     <a>
         <img src="https://img.shields.io/badge/JDK1.8+-必选-green.svg" >
@@ -20,6 +18,10 @@ permalink: /
         <img src="https://img.shields.io/badge/Spring-非必选-green.svg" >
     </a>
 </p>
+
+## 为SQL调试效率而生
+
+---
 
 ## 解决你的痛点问题
 
