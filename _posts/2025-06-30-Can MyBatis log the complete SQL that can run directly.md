@@ -1,3 +1,5 @@
+# 小知识
+
 MyBatis在原则上无法直接记录完整的SQL查询。为了记录查询，所有参数都需要被序列化并表示为字符串。
 ```shell
 ==>  Preparing: SELECT * FROM event WHERE 1=1 and `enabled` = ?

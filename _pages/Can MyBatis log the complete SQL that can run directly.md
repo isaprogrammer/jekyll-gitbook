@@ -6,29 +6,53 @@ category: Jekyll
 layout: post
 ---
 
-# 字节码增强点
-
-```java
-@Override
-public <E> List<E> query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key, BoundSql boundSql) throws SQLException {
-    // ...
-    return list;
-}
-```
+# mybatis-3.2 增强点（org.apache.ibatis.executor.BaseExecutor）
 
 ```java
 @Override
 public int update(MappedStatement ms, Object parameter) throws SQLException {
-    // ...
+    ErrorContext.instance().resource(ms.getResource()).activity("executing an update").object(ms.getId());
+    if (closed) {
+        throw new ExecutorException("Executor was closed.");
+    }
+    clearLocalCache();
     return doUpdate(ms, parameter);
 }
 ```
 
-# 加载探针，启动时会主动增强@RestController增强的类
-<img src='./img.png' alt="">
-
-# 填写关键词，匹配到关键词的SQL将会被打印
-<img src='./img_1.png' alt="">
-
-# 指定拦截的函数，函数内执行的所有SQL都将会被打印
-<img src='./img_2.png' alt="">
+```java
+@Override
+public <E> List<E> query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key, BoundSql boundSql) throws SQLException {
+    ErrorContext.instance().resource(ms.getResource()).activity("executing a query").object(ms.getId());
+    if (closed) {
+        throw new ExecutorException("Executor was closed.");
+    }
+    if (queryStack == 0 && ms.isFlushCacheRequired()) {
+        clearLocalCache();
+    }
+    List<E> list;
+    try {
+        queryStack++;
+        list = resultHandler == null ? (List<E>) localCache.getObject(key) : null;
+        if (list != null) {
+            handleLocallyCachedOutputParameters(ms, key, parameter, boundSql);
+        } else {
+            list = queryFromDatabase(ms, parameter, rowBounds, resultHandler, key, boundSql);
+        }
+    } finally {
+        queryStack--;
+    }
+    if (queryStack == 0) {
+        for (DeferredLoad deferredLoad : deferredLoads) {
+            deferredLoad.load();
+        }
+        // issue #601
+        deferredLoads.clear();
+        if (configuration.getLocalCacheScope() == LocalCacheScope.STATEMENT) {
+            // issue #482
+            clearLocalCache();
+        }
+    }
+    return list;
+}
+```
