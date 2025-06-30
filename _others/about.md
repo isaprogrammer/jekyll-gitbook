@@ -1,5 +1,5 @@
 ---
-title: 关于
+title: 关于作者
 author: Yalong Lee
 date: 2025-06-29
 category: Jekyll

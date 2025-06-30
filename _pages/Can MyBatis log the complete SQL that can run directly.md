@@ -25,10 +25,10 @@ public int update(MappedStatement ms, Object parameter) throws SQLException {
 ```
 
 # 加载探针，启动时会主动增强@RestController增强的类
-![img.png](../pictures/img.png)
+![img.png](img.png)
 
 # 填写关键词，匹配到关键词的SQL将会被打印
-![img_1.png](../pictures/img_1.png)
+![img_1.png](img_1.png)
 
 # 指定拦截的函数，函数内执行的所有SQL都将会被打印
-![img_2.png](../pictures/img_2.png)
+![img_2.png](img_2.png)
