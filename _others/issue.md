@@ -1,5 +1,5 @@
 ---
-title: issue
+title: 故障或建议
 author: Yalong Lee
 date: 2025-06-29
 category: Jekyll

@@ -6,55 +6,57 @@ category: Jekyll
 layout: post
 ---
 
-# mybatis-3.2 
-
-## 增强点（org.apache.ibatis.executor.BaseExecutor）
+# mybatis-3.2
 
 ```java
-@Override
-public int update(MappedStatement ms, Object parameter) throws SQLException {
-    ErrorContext.instance().resource(ms.getResource()).activity("executing an update").object(ms.getId());
-    if (closed) {
-        throw new ExecutorException("Executor was closed.");
-    }
-    clearLocalCache();
-    return doUpdate(ms, parameter);
-}
-```
+package org.apache.ibatis.executor;
 
-```java
-@Override
-public <E> List<E> query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key, BoundSql boundSql) throws SQLException {
-    ErrorContext.instance().resource(ms.getResource()).activity("executing a query").object(ms.getId());
-    if (closed) {
-        throw new ExecutorException("Executor was closed.");
-    }
-    if (queryStack == 0 && ms.isFlushCacheRequired()) {
+public abstract class BaseExecutor implements Executor {
+
+    @Override
+    public int update(MappedStatement ms, Object parameter) throws SQLException {
+        ErrorContext.instance().resource(ms.getResource()).activity("executing an update").object(ms.getId());
+        if (closed) {
+            throw new ExecutorException("Executor was closed.");
+        }
         clearLocalCache();
+        return doUpdate(ms, parameter);
     }
-    List<E> list;
-    try {
-        queryStack++;
-        list = resultHandler == null ? (List<E>) localCache.getObject(key) : null;
-        if (list != null) {
-            handleLocallyCachedOutputParameters(ms, key, parameter, boundSql);
-        } else {
-            list = queryFromDatabase(ms, parameter, rowBounds, resultHandler, key, boundSql);
+
+    @Override
+    public <E> List<E> query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key, BoundSql boundSql) throws SQLException {
+        ErrorContext.instance().resource(ms.getResource()).activity("executing a query").object(ms.getId());
+        if (closed) {
+            throw new ExecutorException("Executor was closed.");
         }
-    } finally {
-        queryStack--;
-    }
-    if (queryStack == 0) {
-        for (DeferredLoad deferredLoad : deferredLoads) {
-            deferredLoad.load();
-        }
-        // issue #601
-        deferredLoads.clear();
-        if (configuration.getLocalCacheScope() == LocalCacheScope.STATEMENT) {
-            // issue #482
+        if (queryStack == 0 && ms.isFlushCacheRequired()) {
             clearLocalCache();
         }
+        List<E> list;
+        try {
+            queryStack++;
+            list = resultHandler == null ? (List<E>) localCache.getObject(key) : null;
+            if (list != null) {
+                handleLocallyCachedOutputParameters(ms, key, parameter, boundSql);
+            } else {
+                list = queryFromDatabase(ms, parameter, rowBounds, resultHandler, key, boundSql);
+            }
+        } finally {
+            queryStack--;
+        }
+        if (queryStack == 0) {
+            for (DeferredLoad deferredLoad : deferredLoads) {
+                deferredLoad.load();
+            }
+            // issue #601
+            deferredLoads.clear();
+            if (configuration.getLocalCacheScope() == LocalCacheScope.STATEMENT) {
+                // issue #482
+                clearLocalCache();
+            }
+        }
+        return list;
     }
-    return list;
+
 }
 ```
